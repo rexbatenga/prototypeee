@@ -786,6 +786,16 @@
             background: #3b82f6;
         }
 
+        .status-badge.pending {
+            background: rgba(148, 163, 184, 0.12);
+            color: #94a3b8;
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .status-badge.pending .status-dot {
+            background: #94a3b8;
+        }
+
         .eta-card {
             background: #1f2937;
             padding: 16px 12px;
@@ -1122,19 +1132,19 @@
                         </div>
                     </div>
 
-                    <div id="statusBadge" class="status-badge">
+                    <div id="statusBadge" class="status-badge pending">
                         <span class="status-dot"></span>
-                        <span id="badgeText">Corridor clear</span>
+                        <span id="badgeText">Awaiting driver</span>
                     </div>
                 </div>
 
                 <div class="eta-card">
-                    <div class="eta-time" id="etaDisplay">5h 0m 0s</div>
+                    <div class="eta-time" id="etaDisplay">Not started</div>
                     <div class="eta-label">Estimated Arrival</div>
                 </div>
 
                 <div>
-                    <div class="updated-text" id="volunteerUpdatedText">Updated via Edge AI</div>
+                    <div class="updated-text" id="volunteerUpdatedText">Waiting for first check-in</div>
                     <button class="share-btn" onclick="shareToDisplay()">
                         <span>Share to Display</span>
                     </button>
@@ -1150,7 +1160,7 @@
                     <span class="edge-ai-badge">Offline Local Model</span>
                 </div>
                 <div class="edge-ai-text" id="edgeAiText">
-                    Running locally on device. Analyzing ETA predictions locally using stored historical speed & checkpoint telemetry.
+                    Standing by. Countdown will begin once the driver's first check-in is received.
                 </div>
             </div>
         </div>
@@ -1167,6 +1177,7 @@
         let pendingCheckpoints = 0;
         let timerInterval = null;
         let isSyncing = false;
+        let journeyStarted = false;
 
         let verifiedRolesCount = 0;
         const totalRequiredRoles = 3;
@@ -1178,6 +1189,7 @@
                 pendingTotalSeconds = event.data.seconds;
                 pendingCheckpoints = event.data.checkpoints;
                 currentCorridorNumber = event.data.corridorNum;
+                journeyStarted = true;
                 startLoadingArrowsSequence();
             } else if (event.data.type === 'REFRESH_REQUEST') {
                 channel.postMessage({ 
@@ -1221,7 +1233,14 @@
             const badge = document.getElementById('statusBadge');
             const badgeText = document.getElementById('badgeText');
 
-            if (passedCheckpoints >= 5 || totalSeconds <= 0) {
+            if (!journeyStarted) {
+                etaDisplay.innerText = 'Not started';
+                badgeText.innerText = 'Awaiting driver';
+                badge.className = 'status-badge pending';
+                return;
+            }
+
+            if (totalSeconds <= 0) {
                 etaDisplay.innerText = 'ARRIVED';
                 badgeText.innerText = 'Arrived';
                 badge.className = 'status-badge arrived';
@@ -1240,7 +1259,10 @@
                 etaDisplay.innerText = secs + 's';
             }
 
-            if (totalSeconds <= 3600) {
+            if (passedCheckpoints >= 5) {
+                badgeText.innerText = `Corridor ${currentCorridorNumber} arriving soon`;
+                badge.className = 'status-badge';
+            } else if (totalSeconds <= 3600) {
                 badgeText.innerText = 'Arriving soon';
                 badge.className = 'status-badge arriving';
             } else {
@@ -1250,20 +1272,36 @@
         }
 
         function startLiveCountdown() {
+            if (!journeyStarted) return;
             if (timerInterval) clearInterval(timerInterval);
 
             timerInterval = setInterval(() => {
-                if (!isSyncing && totalSeconds > 0 && passedCheckpoints < 5) {
+                if (!isSyncing && totalSeconds > 0) {
                     totalSeconds--;
                     updateETADisplay();
-                } else if (passedCheckpoints >= 5 || totalSeconds <= 0) {
+                } else if (totalSeconds <= 0) {
                     clearInterval(timerInterval);
                     updateETADisplay();
                 }
             }, 1000);
         }
 
+        // ETA (in seconds) for each of the driver's first five check-ins, in order:
+        // 7h, 6h30m, 5h, 3h, 1h30m. Not a straight countdown on purpose: real
+        // corridors can look better or worse from one check-in to the next.
+        const etaScheduleSeconds = [
+            7 * 3600,
+            6 * 3600 + 30 * 60,
+            5 * 3600,
+            3 * 3600,
+            1 * 3600 + 30 * 60
+        ];
+
         function performCheckIn() {
+            journeyStarted = true;
+
+            const checkinIndex = passedCheckpoints; // 0 on the first tap, 1 on the second, etc.
+
             if (passedCheckpoints < 5) {
                 pendingCheckpoints = passedCheckpoints + 1;
                 if (currentCorridorNumber > 1) {
@@ -1271,16 +1309,10 @@
                 }
             }
 
-            if (pendingCheckpoints === 5) {
+            if (checkinIndex < etaScheduleSeconds.length) {
+                pendingTotalSeconds = etaScheduleSeconds[checkinIndex];
+            } else {
                 pendingTotalSeconds = 0;
-                currentCorridorNumber = 0;
-            } else if (totalSeconds > 0) {
-                const currentHours = Math.floor(totalSeconds / 3600);
-                if (currentHours > 0) {
-                    pendingTotalSeconds = ((currentHours - 1) * 3600) + (59 * 60) + 59;
-                } else {
-                    pendingTotalSeconds = 0;
-                }
             }
 
             isSyncing = true;
@@ -1297,7 +1329,6 @@
             commandStatusTag.style.borderColor = "rgba(16, 185, 129, 0.3)";
             commandText.innerText = `Officer: "Driver has embarked and is now moving through Corridor ${currentCorridorNumber}. Progress logged."`;
 
-            updateCorridorUI();
             showToast('Check-in logged. Initiating signal pipeline...');
 
             const hubAiLogs = document.getElementById('hubAiLogs');
@@ -1390,6 +1421,7 @@
                                     isSyncing = false;
 
                                     updateDotsUI();
+                                    updateCorridorUI();
                                     updateETADisplay();
                                     startLiveCountdown();
 
@@ -1576,7 +1608,6 @@
         updateCorridorUI();
         updateDotsUI();
         updateETADisplay();
-        startLiveCountdown();
     </script>
 </body>
 </html>
