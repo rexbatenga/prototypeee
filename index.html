@@ -29,7 +29,7 @@
             justify-content: space-between;
             width: 100%;
             max-width: 760px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             background: #161e2e;
             padding: 12px 24px;
             border-radius: 99px;
@@ -83,6 +83,100 @@
             transform: rotate(180deg);
         }
 
+        /* CENTRAL HUB AI CARD */
+        .hub-card {
+            width: 100%;
+            max-width: 760px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+            border: 1px solid #4338ca;
+            border-radius: 20px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 25px rgba(67, 56, 202, 0.15);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .hub-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hub-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #818cf8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ai-pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #818cf8;
+            box-shadow: 0 0 8px #818cf8;
+            animation: aiPulse 1.5s infinite;
+        }
+
+        @keyframes aiPulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .hub-status {
+            font-size: 12px;
+            color: #34d399;
+            background: rgba(52, 211, 153, 0.1);
+            padding: 2px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(52, 211, 153, 0.2);
+        }
+
+        .hub-body {
+            font-size: 13px;
+            color: #c7d2fe;
+            line-height: 1.4;
+        }
+
+        /* VISUAL ARROWS ROW */
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 760px;
+            margin-bottom: 12px;
+            padding: 0 40px;
+        }
+
+        .flow-arrow-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #6366f1;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .arrow-line {
+            height: 2px;
+            width: 60px;
+            background: linear-gradient(90deg, #4338ca, #818cf8);
+            position: relative;
+        }
+
+        .arrow-head {
+            font-size: 14px;
+            color: #818cf8;
+        }
+
         .split-container {
             display: flex;
             gap: 24px;
@@ -96,7 +190,7 @@
             flex: 1;
             min-width: 320px;
             max-width: 360px;
-            height: 640px;
+            height: 600px;
             background: #111827;
             border-radius: 36px;
             border: 6px solid #1f293d;
@@ -332,6 +426,34 @@
         </div>
     </div>
 
+    <!-- CENTRAL HUB AI -->
+    <div class="hub-card">
+        <div class="hub-header">
+            <div class="hub-title">
+                <div class="ai-pulse-dot"></div>
+                Central Hub AI
+            </div>
+            <span class="hub-status">Processing Active</span>
+        </div>
+        <div class="hub-body" id="hubAiLogs">
+            Awaiting signal from driver... Analyzing corridor traffic and adjusting estimated arrival time.
+        </div>
+    </div>
+
+    <!-- FLOW ARROWS -->
+    <div class="flow-row">
+        <div class="flow-arrow-group">
+            <span>Driver Signal</span>
+            <div class="arrow-line"></div>
+            <span class="arrow-head">▲</span>
+        </div>
+        <div class="flow-arrow-group">
+            <span class="arrow-head">▼</span>
+            <div class="arrow-line"></div>
+            <span>Volunteer Update</span>
+        </div>
+    </div>
+
     <div class="split-container">
         <!-- DRIVER PANEL -->
         <div class="panel-frame driver-panel">
@@ -454,6 +576,10 @@
 
             document.getElementById('driverLastCheckin').innerText = 'Last check-in: Just now';
             document.getElementById('volunteerUpdatedText').innerText = 'Updated Just now';
+            
+            // Update AI Hub Log Text
+            const hubAiLogs = document.getElementById('hubAiLogs');
+            hubAiLogs.innerText = `Checkpoint ping received. Central Hub AI updated corridor velocity. Reduced ETA by 1 hour. Forwarding new arrival window to Volunteer Display...`;
 
             updateETADisplay();
             startLiveCountdown();
@@ -461,9 +587,9 @@
             channel.postMessage({ type: 'SYNC_TIME', seconds: totalSeconds });
 
             if (totalSeconds > 0) {
-                showToast('Timestamp check-in sent');
+                showToast('Signal sent to AI Hub');
             } else {
-                showToast('Vehicle has arrived');
+                showToast('Vehicle arrival logged by AI');
             }
         }
 
