@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe Relay — Why we built this</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#10171A;
+    --ink-2:#1B2427;
+    --paper:#F3EEE3;
+    --paper-line:#DCD3BF;
+    --text-dark:#1E2421;
+    --text-dark-soft:#4B534E;
+    --text-light:#EDE8DA;
+    --text-light-soft:#A9B0A8;
+    --amber:#E8A33D;
+    --teal:#3E8574;
+    --red:#B0463A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Source Serif 4', Georgia, serif;
+    background:var(--paper);
+    color:var(--text-dark);
+    font-size: 20px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:0.06em;
+  }
+  .display{
+    font-family:'Space Grotesk', sans-serif;
+  }
+  a{color:inherit;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,163,61,0.10), transparent 60%),
+      var(--ink);
+    color:var(--text-light);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding: clamp(32px,6vw,80px);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+      repeating-linear-gradient(100deg, rgba(237,232,218,0.035) 0px, rgba(237,232,218,0.035) 1px, transparent 1px, transparent 120px);
+    pointer-events:none;
+  }
+  .hero-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    font-size:14px;
+    color:var(--text-light-soft);
+    text-transform:uppercase;
+    position:relative;
+    z-index:1;
+  }
+  .hero-top span{display:block;}
+  .hero-mid{
+    position:relative;
+    z-index:1;
+    padding: 6vh 0 4vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .kicker{
+    font-size:14px;
+    color:var(--amber);
+    text-transform:uppercase;
+    margin-bottom:24px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .kicker::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--amber);
+    box-shadow:0 0 0 0 rgba(232,163,61,0.5);
+    animation:pulseDot 2.4s infinite;
+  }
+  @keyframes pulseDot{
+    0%{box-shadow:0 0 0 0 rgba(232,163,61,0.45);}
+    70%{box-shadow:0 0 0 12px rgba(232,163,61,0);}
+    100%{box-shadow:0 0 0 0 rgba(232,163,61,0);}
+  }
+  
+  /* Centered Interactive Big Circular Icon Link to Prototype */
+  .hero-icon-link {
+    display: block;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #475569, #334155);
+    border: 6px solid #64748b;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+    margin-bottom: 30px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+  }
+  .hero-icon-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-icon-link:hover {
+    transform: scale(1.04);
+    box-shadow: 0 20px 40px rgba(232,163,61,0.3);
+  }
+  .hero-icon-link:focus-visible {
+    outline: 2px solid var(--text-light);
+    outline-offset: 4px;
+  }
+
+  h1.wordmark{
+    font-size:clamp(64px, 13vw, 156px);
+    font-weight:600;
+    line-height:0.94;
+    letter-spacing:-0.02em;
+  }
+  h1.wordmark .dot{ color:var(--amber); }
+  .hero-sub{
+    max-width:740px;
+    margin-top:28px;
+    font-size:clamp(20px,2.4vw,26px);
+    color:var(--text-light-soft);
+    font-weight:400;
+    text-align: center;
+  }
+  
+  .hero-bottom{
+    position:relative;
+    z-index:1;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:20px;
+    border-top:1px solid rgba(237,232,218,0.14);
+    padding-top:22px;
+  }
+  .ping-line{
+    font-size:14px;
+    color:var(--text-light-soft);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .ping-line .dot-live{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--teal);
+    animation:pulseDot 2.4s infinite;
+  }
+  .scroll-cue{
+    font-size:13px;
+    color:var(--text-light-soft);
+    text-transform:uppercase;
+  }
+
+  /* ---------- SHARED SECTION ---------- */
+  section{
+    padding: clamp(64px,11vw,140px) clamp(24px,7vw,96px);
+  }
+  .section-inner{
+    max-width:960px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-size:14px;
+    text-transform:uppercase;
+    color:var(--text-dark-soft);
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:32px;height:2px;
+    background:var(--text-dark-soft);
+  }
+  .eyebrow-big{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(38px,6.5vw,64px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    text-transform:none;
+    color:var(--text-dark);
+    margin-bottom:22px;
+  }
+  .eyebrow-big::before{ display:none; }
+  .section-title{
+    font-size:clamp(34px,4.8vw,52px);
+    font-weight:600;
+    line-height:1.12;
+    margin-bottom:38px;
+    max-width:18ch;
+  }
+  .fade-up{
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.in{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- PROBLEM ---------- */
+  .problem{
+    background:var(--paper);
+    border-top:1px solid var(--paper-line);
+    border-bottom:1px solid var(--paper-line);
+  }
+  .problem p{
+    font-size:clamp(18px,2.1vw,21px);
+    color:var(--text-dark);
+    margin-bottom:24px;
+  }
+  .problem strong{
+    font-weight:600;
+    background:linear-gradient(to bottom, transparent 62%, rgba(232,163,61,0.35) 62%);
+  }
+  .routes-row{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    margin:10px 0 34px;
+  }
+  .route-chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    padding:8px 16px;
+    border:1px solid var(--paper-line);
+    border-radius:4px;
+    color:var(--text-dark-soft);
+    background:#fff8ec;
+    font-weight: 500;
+  }
+  .callout{
+    margin-top:42px;
+    border-left:4px solid var(--amber);
+    padding:24px 30px;
+    background:#FBF5E9;
+  }
+  .callout .callout-label{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:clamp(24px,3.5vw,36px);
+    font-weight:600;
+    text-transform:none;
+    color:var(--amber);
+    margin-bottom:14px;
+  }
+  .callout p{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:500;
+    font-size:clamp(21px,2.6vw,28px);
+    line-height:1.4;
+    color:var(--text-dark);
+    margin:0;
+  }
+
+  /* ---------- PERSONA ---------- */
+  .persona{
+    background:var(--ink);
+    color:var(--text-light);
+  }
+  .persona .eyebrow{ color:var(--text-light-soft); }
+  .persona .eyebrow::before{ background:var(--text-light-soft); }
+  .persona .section-title{ color:var(--text-light); max-width:20ch; }
+  .persona-intro{
+    font-size:clamp(18px,2.1vw,21px);
+    color:var(--text-light-soft);
+    max-width:720px;
+    margin-bottom:16px;
+  }
+  .persona-name{ color:var(--amber); font-weight:600; }
+
+  .timeline{
+    margin:56px 0 48px;
+    position:relative;
+    padding-left:32px;
+    border-left:1px dashed rgba(237,232,218,0.28);
+  }
+  .t-entry{
+    position:relative;
+    padding-bottom:38px;
+  }
+  .t-entry:last-child{padding-bottom:0;}
+  .t-entry::before{
+    content:"";
+    position:absolute;
+    left:-37px;
+    top:4px;
+    width:11px;height:11px;
+    border-radius:50%;
+    background:var(--text-light);
+  }
+  .t-entry.waiting::before{
+    background:transparent;
+    border:1px solid rgba(237,232,218,0.4);
+  }
+  .t-entry.unknown::before{
+    background:var(--red);
+    box-shadow:0 0 0 0 rgba(176,70,58,0.5);
+    animation:pulseDotRed 2s infinite;
+  }
+  @keyframes pulseDotRed{
+    0%{box-shadow:0 0 0 0 rgba(176,70,58,0.5);}
+    70%{box-shadow:0 0 0 11px rgba(176,70,58,0);}
+    100%{box-shadow:0 0 0 0 rgba(176,70,58,0);}
+  }
+  .t-time{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:14px;
+    color:var(--amber);
+    margin-bottom:6px;
+  }
+  .t-text{
+    font-size:18px;
+    color:var(--text-light-soft);
+    max-width:600px;
+  }
+  .t-entry.unknown .t-text{ color:var(--text-light); }
+  .t-entry.unknown .t-time{ color:var(--red); }
+
+  .bridge{
+    margin-top:12px;
+    padding-top:38px;
+    border-top:1px solid rgba(237,232,218,0.14);
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:500;
+    font-size:clamp(21px,2.7vw,28px);
+    line-height:1.45;
+    max-width:760px;
+  }
+  .bridge .accent{ color:var(--amber); }
+
+  /* ---------- PROTOTYPE / SYSTEM WORKFLOW SECTION ---------- */
+  .workflow-section {
+    background: var(--paper);
+    border-top: 1px solid var(--paper-line);
+    border-bottom: 1px solid var(--paper-line);
+  }
+  .workflow-intro {
+    font-size: clamp(18px, 2.1vw, 21px);
+    color: var(--text-dark-soft);
+    max-width: 760px;
+    margin-bottom: 40px;
+  }
+  .workflow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 30px;
+  }
+  .workflow-step-card {
+    background: #FBF5E9;
+    border: 1px solid var(--paper-line);
+    border-left: 4px solid var(--amber);
+    padding: 24px 28px;
+    border-radius: 4px;
+  }
+  .workflow-step-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+  .workflow-step-card p {
+    font-size: 18px;
+    color: var(--text-dark-soft);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .workflow-step-card strong {
+    color: var(--text-dark);
+  }
+
+  /* ---------- COMPARISON SECTION ---------- */
+  .comparison-section {
+    background: #EAE3D2;
+    color: var(--text-dark);
+    border-top: 1px solid var(--paper-line);
+    border-bottom: 1px solid var(--paper-line);
+  }
+  .comparison-section .section-title {
+    max-width: 22ch;
+  }
+  .comparison-intro {
+    font-size: clamp(18px, 2.1vw, 21px);
+    color: var(--text-dark-soft);
+    max-width: 760px;
+    margin-bottom: 40px;
+  }
+  
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--paper-line);
+    background: var(--paper);
+  }
+  
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 17px;
+  }
+  
+  .comparison-table th, .comparison-table td {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--paper-line);
+    vertical-align: middle;
+  }
+  
+  .comparison-table th {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    background: #E2D9C5;
+    color: var(--text-dark);
+  }
+  
+  .comparison-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .comparison-table tr:hover td {
+    background: rgba(232, 163, 61, 0.08);
+  }
+  
+  .col-feature {
+    font-weight: 600;
+    width: 26%;
+    color: var(--text-dark);
+  }
+  .col-rita {
+    width: 37%;
+    color: var(--text-dark-soft);
+  }
+  .col-ours {
+    width: 37%;
+    color: var(--text-dark);
+    font-weight: 500;
+    background: rgba(62, 133, 116, 0.06);
+  }
+
+  .comparison-summary-box {
+    margin-top: 40px;
+    background: #FBF5E9;
+    border: 1px solid var(--paper-line);
+    border-left: 4px solid var(--teal);
+    padding: 28px 32px;
+    border-radius: 4px;
+  }
+  .comparison-summary-box h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--teal);
+    margin-bottom: 14px;
+  }
+  .comparison-summary-box p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .comparison-summary-box p:last-child {
+    margin-bottom: 0;
+  }
+
+  footer{
+    background:var(--ink);
+    color:var(--text-light-soft);
+    padding:30px clamp(24px,7vw,96px) 44px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    text-transform:uppercase;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+    border-top:1px solid rgba(237,232,218,0.1);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+
+  @media (max-width:768px){
+    .hero{min-height:96vh;}
+    .hero-bottom{flex-direction:column; align-items:flex-start;}
+    .comparison-table th, .comparison-table td { font-size: 15px; padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-top mono">
+    <span>SAFE RELAY</span>
+    <span>FIELD BRIEFING — WHY THIS EXISTS</span>
+  </div>
+
+  <div class="hero-mid">
+    <div class="kicker mono">AID CORRIDOR TRACKING · NO GPS · NO CONSTANT SIGNAL</div>
+    
+    <!-- Centered Interactive Big Circular Icon Link to Prototype -->
+    <a class="hero-icon-link" href="prototype.html" aria-label="Open the tracker prototype">
+      <img src="images2.jpeg" alt="Safe Relay Circular Icon">
+    </a>
+
+    <h1 class="wordmark display">Safe Relay<span class="dot">.</span></h1>
+    <p class="hero-sub">A quiet way to know a shipment is still moving — without ever showing anyone where it is.</p>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="ping-line mono">
+      <span class="dot-live"></span>
+      1-byte signal received · no coordinates attached
+    </div>
+    <div class="scroll-cue mono">Scroll — the problem ↓</div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="section-inner">
+    <div class="eyebrow-big display fade-up">The Problem</div>
+    <h2 class="section-title display fade-up">Aid is moving through corridors no one can safely watch.</h2>
+
+    <div class="fade-up">
+      <p>Because of the conflict, <strong>air and sea access for humanitarian transfers has been closed or is no longer available</strong>, making land corridors the practical routes for bringing aid into Iran.</p>
+
+      <div class="routes-row">
+        <span class="route-chip">TURKEY CORRIDOR</span>
+        <span class="route-chip">AZERBAIJAN</span>
+        <span class="route-chip">TAJIKISTAN</span>
+        <span class="route-chip">UZBEKISTAN</span>
+      </div>
+
+      <p>These corridors carry critical supplies such as medicine and food, but they create two major challenges: <strong>security and connectivity</strong>.</p>
+
+      <p>Traditional GPS tracking cannot safely be used, because continuously revealing the convoy's location could expose it to hostile actors. At the same time, network connectivity along these routes can be extremely weak or unreliable.</p>
+
+      <p>This creates <strong>logistical blindness</strong>. Humanitarian teams may know that a shipment is late, but they cannot reliably know whether it is still moving, or when it is likely to arrive.</p>
+
+      <div class="callout">
+        <div class="callout-label">So the problem is</div>
+        <p>How can we provide useful delivery information without exposing the convoy's location, or depending on continuous internet?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONA -->
+<section class="persona">
+  <div class="section-inner">
+    <div class="eyebrow mono fade-up">Field log — a volunteer waiting</div>
+    <h2 class="section-title display fade-up">Reza doesn't need a map. She needs to know it's still coming.</h2>
+
+    <p class="persona-intro fade-up"><span class="persona-name">Reza</span> is a humanitarian aid volunteer working a drop-off zone along the Turkey and Central Asian corridors into Iran. Her rural district has almost no signal — a bar, if she's lucky, gone as quickly as it came. Over 100 families and patients are depending on the medicine she's there to receive.</p>
+    <p class="persona-intro fade-up">All she has is word that a truck is due by 5 PM.</p>
+
+    <div class="timeline fade-up">
+      <div class="t-entry">
+        <div class="t-time mono">4:30 PM</div>
+        <div class="t-text">Word reaches the community: a shipment is expected at the drop-off zone by 5.</div>
+      </div>
+      <div class="t-entry">
+        <div class="t-time mono">5:00 PM</div>
+        <div class="t-text">Reza arrives at the zone, on time, and waits.</div>
+      </div>
+      <div class="t-entry waiting">
+        <div class="t-time mono">5:00 PM – 8:00 PM</div>
+        <div class="t-text">No signal. No call. No way to check anything. Just waiting.</div>
+      </div>
+      <div class="t-entry unknown">
+        <div class="t-time mono">8:00 PM</div>
+        <div class="t-text">Still nothing. Is the truck just late? Did it turn back? Was it stopped? Reza has no way to know — and 100 families are waiting on her answer.</div>
+      </div>
+    </div>
+
+    <p class="bridge fade-up">That gap between 5 and 8 o'clock is the whole problem. <span class="accent">Safe Relay</span> doesn't try to show anyone where the truck is — it just gives Reza one honest thing to watch while she waits.</p>
+  </div>
+</section>
+
+<!-- PROTOTYPE SYSTEM & OFFLINE WORKFLOW EXPLANATION -->
+<section class="workflow-section">
+  <div class="section-inner">
+    <div class="eyebrow mono fade-up">How The Prototype Works Offline</div>
+    <h2 class="section-title display fade-up">A secure, low-bandwidth architecture for high-risk zones.</h2>
+    <p class="workflow-intro fade-up">Safe Relay bypasses the need for continuous internet or live GPS tracking by combining satellite observation, human verification, and edge intelligence.</p>
+
+    <div class="workflow-steps fade-up">
+      <div class="workflow-step-card">
+        <h3>1. Satellite & Central Hub Analysis</h3>
+        <p>The UN funds a dedicated satellite exclusively for humanitarian aid shipments. This satellite captures current imagery of the <strong>Turkey Corridor, Azerbaijan, Tajikistan, and Uzbekistan</strong>. The Central Hub AI then analyzes possible routes based on these captures.</p>
+      </div>
+
+      <div class="workflow-step-card">
+        <h3>2. Human Verification & Dissemination</h3>
+        <p>The AI-analyzed routes are sent to human experts to verify safety and viability. Once verified, the Command Center disseminates route guidelines and instructions down to the drivers.</p>
+      </div>
+
+      <div class="workflow-step-card">
+        <h3>3. Offline Driver Interface</h3>
+        <p>The driver interacts with a simple interface on their device. <strong>It does not need an internet connection or GPS to function; it operates completely offline.</strong> When passing checkpoints or milestones, the driver simply taps a button.</p>
+      </div>
+
+      <div class="workflow-step-card">
+        <h3>4. Edge AI & Minimal Signal Transmission</h3>
+        <p>When the driver taps the button, the device transmits just <strong>1 byte of signal</strong> (requiring at least a momentary signal snippet) through to the Central Hub AI. Embedded directly within the volunteer application, <strong>Edge AI</strong> processes this minimal transmission locally to compute and display a reliable ETA directly on the volunteer's phone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY COMPARISON SECTION -->
+<section class="comparison-section">
+  <div class="section-inner">
+    <div class="eyebrow mono fade-up">System Analysis & Comparison</div>
+    <h2 class="section-title display fade-up">How Safe Relay compares to existing humanitarian tracking.</h2>
+    <p class="comparison-intro fade-up">When evaluating logistics tools for conflict regions like the Iran corridors, we benchmark our approach against the World Food Programme's **RITA (Relief Item Tracking Application)** — the global standard for tracking humanitarian cargo.</p>
+
+    <div class="table-container fade-up">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th class="col-feature">Feature / Metric</th>
+            <th class="col-rita">Existing Standard (WFP RITA)</th>
+            <th class="col-ours">Safe Relay (Our System)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-feature">Main Purpose</td>
+            <td class="col-rita">Track humanitarian cargo across logistics nodes</td>
+            <td class="col-ours">Track medicine deliveries safely during active conflict</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Connectivity</td>
+            <td class="col-rita">Internet-based operation</td>
+            <td class="col-ours">Offline-first design with minimal check-ins</td>
+          </tr>
+          <tr>
+            <td class="col-feature">GPS & Security</td>
+            <td class="col-rita">Standard location/node logging</td>
+            <td class="col-ours">Deliberately avoids continuous GPS exposure</td>
+          </tr>
+          <tr>
+            <td class="col-feature">Arrival Estimation</td>
+            <td class="col-rita">Standard Expected Arrival Date field</td>
+            <td class="col-ours">AI-generated ETA window and corridor safety analysis</td>
+          </tr>
+          <tr>
+            <td class="col-feature">End Beneficiaries</td>
+            <td class="col-rita">Restricted to logistics operators and agencies</td>
+            <td class="col-ours">Provides simple arrival updates to local volunteers without requiring accounts</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="comparison-summary-box fade-up">
+      <h3>The Key Architectural Difference</h3>
+      <p>Traditional tools like RITA rely on continuous internet connectivity and administrative visibility from entry points to extended delivery points. However, in active conflict zones, that constant data stream creates major security vulnerabilities.</p>
+      <p><strong>Safe Relay</strong> shifts the paradigm: instead of broadcasting where a truck is, it uses minimal check-ins and AI prediction to confirm <em>that</em> it is moving safely—bridging the gap for local volunteers without putting convoys at risk.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Safe Relay</span>
+  <span>A way to know it's still moving.</span>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.15});
+  document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
