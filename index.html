@@ -9,320 +9,472 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, sans-serif;
         }
 
         body {
-            background-color: #0f1115;
-            color: #ffffff;
+            background-color: #0b0f19;
+            color: #f3f4f6;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
             padding: 20px;
         }
 
-        .toggle-container {
-            margin-bottom: 25px;
-            background-color: #1e222b;
-            padding: 6px;
-            border-radius: 30px;
+        .dashboard-header {
             display: flex;
-            gap: 5px;
-            border: 1px solid #2d323f;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 760px;
+            margin-bottom: 20px;
+            background: #161e2e;
+            padding: 12px 24px;
+            border-radius: 99px;
+            border: 1px solid #232d3f;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .toggle-btn {
-            background: none;
-            border: none;
-            color: #8e95a5;
-            padding: 10px 24px;
+        .dashboard-title {
             font-size: 14px;
             font-weight: 600;
-            border-radius: 20px;
+            color: #9ca3af;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .status-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .corridor-chip {
+            background: #1f2937;
+            color: #9ca3af;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            border: 1px solid #374151;
+        }
+
+        .refresh-btn {
+            background: #1f2937;
+            border: 1px solid #374151;
+            color: #9ca3af;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .toggle-btn.active {
-            background-color: #2d323f;
+        .refresh-btn:hover {
+            background: #374151;
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
-        /* Mobile Device Frame */
-        .phone-frame {
-            width: 360px;
-            height: 720px;
-            background-color: #16181d;
-            border-radius: 40px;
-            border: 12px solid #282c37;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        .refresh-btn:active {
+            transform: rotate(180deg);
+        }
+
+        .split-container {
+            display: flex;
+            gap: 24px;
+            width: 100%;
+            max-width: 760px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .panel-frame {
+            flex: 1;
+            min-width: 320px;
+            max-width: 360px;
+            height: 640px;
+            background: #111827;
+            border-radius: 36px;
+            border: 6px solid #1f293d;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 0 2px rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            padding: 24px;
         }
 
-        /* Status Bar */
-        .status-bar {
-            height: 40px;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 600;
-            color: #e1e4ea;
-        }
-
-        .corridor-label {
-            color: #8e95a5;
-            font-size: 13px;
-        }
-
-        /* Views */
-        .view {
-            display: none;
-            flex-direction: column;
-            height: calc(100% - 40px);
-            padding: 20px 24px 32px 24px;
-        }
-
-        .view.active {
-            display: flex;
-        }
-
-        /* Driver Mode */
-        .driver-view {
+        .driver-panel {
             justify-content: space-between;
             align-items: center;
             text-align: center;
         }
 
-        .driver-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-top: 10px;
+        .volunteer-panel {
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .view-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #9ca3af;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            background: rgba(37, 99, 235, 0.15);
+            animation: pulse 2.5s infinite ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.8; }
         }
 
         .check-in-btn {
-            width: 220px;
-            height: 220px;
+            position: relative;
+            width: 190px;
+            height: 190px;
             border-radius: 50%;
-            background-color: #ffffff;
-            border: none;
-            color: #0d0e11;
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 1.3;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            transition: transform 0.1s ease, background-color 0.2s ease;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
+            transition: all 0.15s ease;
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
             user-select: none;
         }
 
         .check-in-btn:active {
-            transform: scale(0.95);
-            background-color: #e2e2e2;
+            transform: scale(0.94);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-text-main {
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 2px;
+        }
+
+        .btn-text-sub {
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.85;
         }
 
         .driver-footer {
-            margin-bottom: 20px;
+            width: 100%;
+            background: #1f2937;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid #374151;
         }
 
         .driver-subtext {
-            color: #8e95a5;
-            font-size: 14px;
-            margin-bottom: 6px;
-        }
-
-        .driver-last-checkin {
-            color: #8e95a5;
+            color: #f3f4f6;
             font-size: 13px;
-        }
-
-        /* Volunteer Mode */
-        .volunteer-view {
-            text-align: center;
-            justify-content: flex-start;
-        }
-
-        .volunteer-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background-color: rgba(22, 101, 52, 0.4);
-            color: #4ade80;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 40px;
-            border: 1px solid rgba(74, 222, 128, 0.2);
-        }
-
-        .eta-time {
-            font-size: 52px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: -1px;
+            font-weight: 500;
             margin-bottom: 4px;
         }
 
-        .eta-label {
-            color: #8e95a5;
-            font-size: 14px;
-            margin-bottom: 40px;
+        .driver-last-checkin {
+            color: #9ca3af;
+            font-size: 12px;
         }
 
-        .divider {
-            height: 1px;
-            background-color: #242834;
-            width: 100%;
-            margin-bottom: 30px;
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            padding: 8px 20px;
+            border-radius: 99px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        .status-badge.arriving {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .status-badge.arriving .status-dot {
+            background: #f59e0b;
+        }
+
+        .status-badge.arrived {
+            background: rgba(59, 130, 246, 0.12);
+            color: #3b82f6;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .status-badge.arrived .status-dot {
+            background: #3b82f6;
+        }
+
+        .eta-card {
+            background: #1f2937;
+            padding: 28px 16px;
+            border-radius: 24px;
+            border: 1px solid #374151;
+            margin: 15px 0;
+        }
+
+        .eta-time {
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .eta-label {
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .updated-text {
-            color: #8e95a5;
-            font-size: 13px;
-            margin-bottom: 30px;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 12px;
         }
 
         .share-btn {
             width: 100%;
-            background-color: transparent;
-            border: 1px solid #3b4252;
+            background: #1f2937;
+            border: 1px solid #374151;
             color: #ffffff;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .share-btn:hover {
-            background-color: #242834;
+            background: #374151;
         }
 
-        /* Notification Popups */
         .toast {
-            position: absolute;
+            position: fixed;
             bottom: -60px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #2d323f;
+            background: #374151;
             color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 99px;
             font-size: 12px;
-            transition: bottom 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            font-weight: 500;
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
             white-space: nowrap;
+            border: 1px solid #4b5563;
+            z-index: 100;
         }
 
         .toast.show {
-            bottom: 20px;
+            bottom: 24px;
         }
     </style>
 </head>
 <body>
 
-    <div class="toggle-container">
-        <button class="toggle-btn active" onclick="switchMode('driver')">Driver Mode</button>
-        <button class="toggle-btn" onclick="switchMode('volunteer')">Volunteer Mode</button>
+    <div class="dashboard-header">
+        <span class="dashboard-title">Humanitarian Tracker</span>
+        <div class="status-right">
+            <span class="corridor-chip">Corridor 4</span>
+            <button class="refresh-btn" onclick="manualRefresh()" title="Refresh Status">↻</button>
+        </div>
     </div>
 
-    <div class="phone-frame">
-        <div class="status-bar">
-            <span>9:41</span>
-            <span class="corridor-label">Corridor 4</span>
-        </div>
-
-        <!-- DRIVER VIEW -->
-        <div id="driverView" class="view driver-view active">
-            <div class="driver-title">Driver mode</div>
+    <div class="split-container">
+        <!-- DRIVER PANEL -->
+        <div class="panel-frame driver-panel">
+            <div class="view-title">Driver Control</div>
             
-            <button class="check-in-btn" onclick="performCheckIn()">
-                <span>I am safe.</span>
-                <span>I am moving.</span>
-            </button>
+            <div class="btn-wrapper">
+                <div class="pulse-ring"></div>
+                <button class="check-in-btn" onclick="performCheckIn()">
+                    <span class="btn-text-main">I am safe.</span>
+                    <span class="btn-text-sub">I am moving.</span>
+                </button>
+            </div>
 
             <div class="driver-footer">
-                <div class="driver-subtext">Tap when passing a safe point</div>
+                <div class="driver-subtext">Tap when passing a checkpoint</div>
                 <div class="driver-last-checkin" id="driverLastCheckin">Last check-in: 42 min ago</div>
             </div>
         </div>
 
-        <!-- VOLUNTEER VIEW -->
-        <div id="volunteerView" class="view volunteer-view">
-            <div class="volunteer-title">Volunteer mode</div>
-            
+        <!-- VOLUNTEER PANEL -->
+        <div class="panel-frame volunteer-panel">
             <div>
-                <span class="status-badge">Corridor clear</span>
+                <div class="view-title">Volunteer Display</div>
+                <div id="statusBadge" class="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="badgeText">Corridor clear</span>
+                </div>
             </div>
 
-            <div class="eta-time">1h 42m</div>
-            <div class="eta-label">Estimated arrival</div>
+            <div class="eta-card">
+                <div class="eta-time" id="etaDisplay">5h 0m 0s</div>
+                <div class="eta-label">Estimated Arrival</div>
+            </div>
 
-            <div class="divider"></div>
-
-            <div class="updated-text" id="volunteerUpdatedText">Updated 6 min ago</div>
-
-            <button class="share-btn" onclick="shareToDisplay()">Share to display</button>
+            <div>
+                <div class="updated-text" id="volunteerUpdatedText">Updated 6 min ago</div>
+                <button class="share-btn" onclick="shareToDisplay()">
+                    <span>Share to Display</span>
+                </button>
+            </div>
         </div>
-
-        <div id="toast" class="toast">Signal transmitted (Timestamp only)</div>
     </div>
 
+    <div id="toast" class="toast">Timestamp Sent</div>
+
     <script>
-        let lastCheckInMinutes = 42;
-        let lastUpdatedMinutes = 6;
+        let totalSeconds = 18000; // 5 hours default
+        let timerInterval = null;
 
-        function switchMode(mode) {
-            const driverView = document.getElementById('driverView');
-            const volunteerView = document.getElementById('volunteerView');
-            const buttons = document.querySelectorAll('.toggle-btn');
+        const channel = new BroadcastChannel('delivery_tracker_channel');
 
-            if (mode === 'driver') {
-                driverView.classList.add('active');
-                volunteerView.classList.remove('active');
-                buttons[0].classList.add('active');
-                buttons[1].classList.remove('active');
+        channel.onmessage = (event) => {
+            if (event.data.type === 'SYNC_TIME') {
+                totalSeconds = event.data.seconds;
+                updateETADisplay();
+                startLiveCountdown();
+                document.getElementById('volunteerUpdatedText').innerText = 'Updated Just now';
+                document.getElementById('driverLastCheckin').innerText = 'Last check-in: Just now';
+            } else if (event.data.type === 'REFRESH_REQUEST') {
+                channel.postMessage({ type: 'SYNC_TIME', seconds: totalSeconds });
+            }
+        };
+
+        function updateETADisplay() {
+            const etaDisplay = document.getElementById('etaDisplay');
+            const badge = document.getElementById('statusBadge');
+            const badgeText = document.getElementById('badgeText');
+
+            if (totalSeconds <= 0) {
+                etaDisplay.innerText = '0s';
+                badgeText.innerText = 'Arrived';
+                badge.className = 'status-badge arrived';
+                return;
+            }
+
+            const hours = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = totalSeconds % 60;
+
+            if (hours > 0) {
+                etaDisplay.innerText = hours + 'h ' + mins + 'm ' + secs + 's';
+            } else if (mins > 0) {
+                etaDisplay.innerText = mins + 'm ' + secs + 's';
             } else {
-                volunteerView.classList.add('active');
-                driverView.classList.remove('active');
-                buttons[1].classList.add('active');
-                buttons[0].classList.remove('active');
+                etaDisplay.innerText = secs + 's';
+            }
+
+            if (totalSeconds <= 3600) {
+                badgeText.innerText = 'Arriving soon';
+                badge.className = 'status-badge arriving';
+            } else {
+                badgeText.innerText = 'Corridor clear';
+                badge.className = 'status-badge';
             }
         }
 
+        function startLiveCountdown() {
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                    updateETADisplay();
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
         function performCheckIn() {
-            lastCheckInMinutes = 0;
+            if (totalSeconds > 0) {
+                const currentHours = Math.floor(totalSeconds / 3600);
+                
+                if (currentHours > 0) {
+                    totalSeconds = ((currentHours - 1) * 3600) + (59 * 60) + 59;
+                } else {
+                    totalSeconds = 0;
+                }
+            }
+
             document.getElementById('driverLastCheckin').innerText = 'Last check-in: Just now';
-            
-            // Simulating Volunteer side update from checkin
-            lastUpdatedMinutes = 0;
             document.getElementById('volunteerUpdatedText').innerText = 'Updated Just now';
 
-            showToast('Timestamp check-in sent');
+            updateETADisplay();
+            startLiveCountdown();
+
+            channel.postMessage({ type: 'SYNC_TIME', seconds: totalSeconds });
+
+            if (totalSeconds > 0) {
+                showToast('Timestamp check-in sent');
+            } else {
+                showToast('Vehicle has arrived');
+            }
+        }
+
+        function manualRefresh() {
+            channel.postMessage({ type: 'REFRESH_REQUEST' });
+            updateETADisplay();
+            showToast('Time & status refreshed');
         }
 
         function shareToDisplay() {
-            showToast('Sent to shared warehouse display');
+            showToast('Shared to public display screen');
         }
 
         function showToast(message) {
@@ -331,9 +483,11 @@
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 2500);
+            }, 2200);
         }
-    </script>
 
+        updateETADisplay();
+        startLiveCountdown();
+    </script>
 </body>
 </html>
