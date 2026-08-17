@@ -14,12 +14,12 @@
     --paper:#F3EEE3;
     --paper-line:#DCD3BF;
     --text-dark:#1E2421;
-    --text-dark-soft:#4B534E;
-    --text-light:#EDE8DA;
-    --text-light-soft:#A9B0A8;
+    --text-dark-soft:#3A423C;
+    --text-light:#F5F1E6;
+    --text-light-soft:#C9CFC5;
     --amber:#E8A33D;
     --teal:#3E8574;
-    --red:#B0463A;
+    --red:#C23B2E;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -27,7 +27,7 @@
     font-family:'Source Serif 4', Georgia, serif;
     background:var(--paper);
     color:var(--text-dark);
-    font-size: 20px;
+    font-size:20px;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
@@ -77,11 +77,11 @@
   .hero-mid{
     position:relative;
     z-index:1;
-    padding: 6vh 0 4vh;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding:6vh 0 4vh;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
   }
   .kicker{
     font-size:14px;
@@ -104,36 +104,35 @@
     70%{box-shadow:0 0 0 12px rgba(232,163,61,0);}
     100%{box-shadow:0 0 0 0 rgba(232,163,61,0);}
   }
-  
-  /* Centered Interactive Big Circular Icon Link to Prototype (Adjusted image fit) */
-  .hero-icon-link {
-    display: block;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: #000;
-    border: 6px solid #64748b;
-    overflow: hidden;
-    box-shadow: 0 16px 36px rgba(0,0,0,0.5);
-    margin-bottom: 30px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    text-decoration: none;
+
+  .hero-icon-link{
+    display:block;
+    width:clamp(160px,20vw,220px);
+    height:clamp(160px,20vw,220px);
+    border-radius:50%;
+    background:#000;
+    border:6px solid #64748b;
+    overflow:hidden;
+    box-shadow:0 16px 36px rgba(0,0,0,0.5);
+    margin-bottom:30px;
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration:none;
   }
-  .hero-icon-link img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scale(1.18);
-    transform-origin: center;
-    display: block;
+  .hero-icon-link img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transform:scale(1.18);
+    transform-origin:center;
+    display:block;
   }
-  .hero-icon-link:hover {
-    transform: scale(1.04);
-    box-shadow: 0 20px 40px rgba(232,163,61,0.3);
+  .hero-icon-link:hover{
+    transform:scale(1.04);
+    box-shadow:0 20px 40px rgba(232,163,61,0.3);
   }
-  .hero-icon-link:focus-visible {
-    outline: 2px solid var(--text-light);
-    outline-offset: 4px;
+  .hero-icon-link:focus-visible{
+    outline:2px solid var(--text-light);
+    outline-offset:4px;
   }
 
   h1.wordmark{
@@ -149,9 +148,9 @@
     font-size:clamp(20px,2.4vw,26px);
     color:var(--text-light-soft);
     font-weight:400;
-    text-align: center;
+    text-align:center;
   }
-  
+
   .hero-bottom{
     position:relative;
     z-index:1;
@@ -210,9 +209,62 @@
     letter-spacing:-0.01em;
     text-transform:none;
     color:var(--text-dark);
-    margin-bottom:22px;
+    margin:0;
   }
   .eyebrow-big::before{ display:none; }
+
+  .problem-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:28px;
+    margin-bottom:22px;
+  }
+  .blocked-icons{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .blocked-icon{
+    position:relative;
+    width:112px;
+    text-align:center;
+  }
+  .blocked-icon-frame{
+    position:relative;
+    width:112px;
+    height:112px;
+    background:transparent;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px;
+    overflow:visible;
+  }
+  .blocked-icon-frame img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    display:block;
+    filter:drop-shadow(0 6px 12px rgba(30,36,33,0.22));
+  }
+  .blocked-icon-frame svg{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+  }
+  .blocked-caption{
+    margin-top:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--red);
+    font-weight:500;
+  }
+
   .section-title{
     font-size:clamp(34px,4.8vw,52px);
     font-weight:600;
@@ -259,7 +311,7 @@
     border-radius:4px;
     color:var(--text-dark-soft);
     background:#fff8ec;
-    font-weight: 500;
+    font-weight:500;
   }
   .callout{
     margin-top:42px;
@@ -326,13 +378,13 @@
   }
   .t-entry.unknown::before{
     background:var(--red);
-    box-shadow:0 0 0 0 rgba(176,70,58,0.5);
+    box-shadow:0 0 0 0 rgba(194,59,46,0.5);
     animation:pulseDotRed 2s infinite;
   }
   @keyframes pulseDotRed{
-    0%{box-shadow:0 0 0 0 rgba(176,70,58,0.5);}
-    70%{box-shadow:0 0 0 11px rgba(176,70,58,0);}
-    100%{box-shadow:0 0 0 0 rgba(176,70,58,0);}
+    0%{box-shadow:0 0 0 0 rgba(194,59,46,0.5);}
+    70%{box-shadow:0 0 0 11px rgba(194,59,46,0);}
+    100%{box-shadow:0 0 0 0 rgba(194,59,46,0);}
   }
   .t-time{
     font-family:'IBM Plex Mono', monospace;
@@ -360,142 +412,130 @@
   }
   .bridge .accent{ color:var(--amber); }
 
-  /* ---------- PROTOTYPE / SYSTEM WORKFLOW SECTION ---------- */
-  .workflow-section {
-    background: var(--paper);
-    border-top: 1px solid var(--paper-line);
-    border-bottom: 1px solid var(--paper-line);
+  .persona-image{
+    margin-top:48px;
   }
-  .workflow-intro {
-    font-size: clamp(18px, 2.1vw, 21px);
-    color: var(--text-dark-soft);
-    max-width: 760px;
-    margin-bottom: 40px;
+  .persona-image img{
+    width:100%;
+    display:block;
+    border-radius:14px;
+    border:1px solid rgba(237,232,218,0.14);
+    box-shadow:0 24px 50px rgba(0,0,0,0.45);
   }
-  .workflow-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    margin-top: 30px;
-  }
-  .workflow-step-card {
-    background: #FBF5E9;
-    border: 1px solid var(--paper-line);
-    border-left: 4px solid var(--amber);
-    padding: 24px 28px;
-    border-radius: 4px;
-  }
-  .workflow-step-card h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-dark);
-    margin-bottom: 10px;
-  }
-  .workflow-step-card p {
-    font-size: 18px;
-    color: var(--text-dark-soft);
-    line-height: 1.6;
-    margin: 0;
-  }
-  .workflow-step-card strong {
-    color: var(--text-dark);
+  .persona-image-caption{
+    margin-top:14px;
+    font-size:13px;
+    color:var(--text-light-soft);
+    text-transform:uppercase;
   }
 
-  /* ---------- COMPARISON SECTION ---------- */
-  .comparison-section {
-    background: #EAE3D2;
-    color: var(--text-dark);
-    border-top: 1px solid var(--paper-line);
-    border-bottom: 1px solid var(--paper-line);
+  /* ---------- WORKFLOW ---------- */
+  .workflow-section{
+    background:var(--paper);
+    border-top:1px solid var(--paper-line);
+    border-bottom:1px solid var(--paper-line);
   }
-  .comparison-section .section-title {
-    max-width: 22ch;
+  .workflow-intro{
+    font-size:clamp(18px,2.1vw,21px);
+    color:var(--text-dark-soft);
+    max-width:760px;
+    margin-bottom:40px;
   }
-  .comparison-intro {
-    font-size: clamp(18px, 2.1vw, 21px);
-    color: var(--text-dark-soft);
-    max-width: 760px;
-    margin-bottom: 40px;
+  .workflow-steps{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+    margin-top:30px;
   }
-  
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-    margin-top: 20px;
-    border-radius: 8px;
-    border: 1px solid var(--paper-line);
-    background: var(--paper);
+  .workflow-step-card{
+    background:#FBF5E9;
+    border:1px solid var(--paper-line);
+    border-left:4px solid var(--amber);
+    padding:24px 28px;
+    border-radius:4px;
   }
-  
-  .comparison-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    font-size: 17px;
+  .workflow-step-card h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:22px;
+    font-weight:600;
+    color:var(--text-dark);
+    margin-bottom:10px;
   }
-  
-  .comparison-table th, .comparison-table td {
-    padding: 18px 22px;
-    border-bottom: 1px solid var(--paper-line);
-    vertical-align: middle;
+  .workflow-step-card p{
+    font-size:18px;
+    color:var(--text-dark-soft);
+    line-height:1.6;
+    margin:0;
   }
-  
-  .comparison-table th {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 19px;
-    background: #E2D9C5;
-    color: var(--text-dark);
-  }
-  
-  .comparison-table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .comparison-table tr:hover td {
-    background: rgba(232, 163, 61, 0.08);
-  }
-  
-  .col-feature {
-    font-weight: 600;
-    width: 26%;
-    color: var(--text-dark);
-  }
-  .col-rita {
-    width: 37%;
-    color: var(--text-dark-soft);
-  }
-  .col-ours {
-    width: 37%;
-    color: var(--text-dark);
-    font-weight: 500;
-    background: rgba(62, 133, 116, 0.06);
-  }
+  .workflow-step-card strong{ color:var(--text-dark); }
 
-  .comparison-summary-box {
-    margin-top: 40px;
-    background: #FBF5E9;
-    border: 1px solid var(--paper-line);
-    border-left: 4px solid var(--teal);
-    padding: 28px 32px;
-    border-radius: 4px;
+  /* ---------- COMPARISON ---------- */
+  .comparison-section{
+    background:#EAE3D2;
+    color:var(--text-dark);
+    border-top:1px solid var(--paper-line);
+    border-bottom:1px solid var(--paper-line);
   }
-  .comparison-summary-box h3 {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--teal);
-    margin-bottom: 14px;
+  .comparison-section .section-title{ max-width:22ch; }
+  .comparison-intro{
+    font-size:clamp(18px,2.1vw,21px);
+    color:var(--text-dark-soft);
+    max-width:760px;
+    margin-bottom:40px;
   }
-  .comparison-summary-box p {
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 12px;
+  .table-container{
+    width:100%;
+    overflow-x:auto;
+    margin-top:20px;
+    border-radius:8px;
+    border:1px solid var(--paper-line);
+    background:var(--paper);
   }
-  .comparison-summary-box p:last-child {
-    margin-bottom: 0;
+  .comparison-table{
+    width:100%;
+    border-collapse:collapse;
+    text-align:left;
+    font-size:17px;
   }
+  .comparison-table th, .comparison-table td{
+    padding:18px 22px;
+    border-bottom:1px solid var(--paper-line);
+    vertical-align:middle;
+  }
+  .comparison-table th{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:19px;
+    background:#E2D9C5;
+    color:var(--text-dark);
+  }
+  .comparison-table tr:last-child td{ border-bottom:none; }
+  .comparison-table tr:hover td{ background:rgba(232,163,61,0.08); }
+  .col-feature{ font-weight:600; width:26%; color:var(--text-dark); }
+  .col-rita{ width:37%; color:var(--text-dark-soft); }
+  .col-ours{ width:37%; color:var(--text-dark); font-weight:500; background:rgba(62,133,116,0.06); }
+
+  .comparison-summary-box{
+    margin-top:40px;
+    background:#FBF5E9;
+    border:1px solid var(--paper-line);
+    border-left:4px solid var(--teal);
+    padding:28px 32px;
+    border-radius:4px;
+  }
+  .comparison-summary-box h3{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:24px;
+    font-weight:600;
+    color:var(--teal);
+    margin-bottom:14px;
+  }
+  .comparison-summary-box p{
+    font-size:18px;
+    line-height:1.6;
+    margin-bottom:12px;
+  }
+  .comparison-summary-box p:last-child{ margin-bottom:0; }
 
   footer{
     background:var(--ink);
@@ -518,7 +558,8 @@
   @media (max-width:768px){
     .hero{min-height:96vh;}
     .hero-bottom{flex-direction:column; align-items:flex-start;}
-    .comparison-table th, .comparison-table td { font-size: 15px; padding: 14px 16px; }
+    .comparison-table th, .comparison-table td{ font-size:15px; padding:14px 16px; }
+    .problem-header{ flex-direction:column; align-items:flex-start; }
   }
 </style>
 </head>
@@ -533,8 +574,7 @@
 
   <div class="hero-mid">
     <div class="kicker mono">AID CORRIDOR TRACKING · NO GPS · NO CONSTANT SIGNAL</div>
-    
-    <!-- Centered Interactive Big Circular Icon Link to Prototype (Scaled to fill circular border) -->
+
     <a class="hero-icon-link" href="prototype.html" aria-label="Open the tracker prototype">
       <img src="images2.jpeg" alt="Safe Relay Circular Icon">
     </a>
@@ -555,7 +595,39 @@
 <!-- PROBLEM -->
 <section class="problem">
   <div class="section-inner">
-    <div class="eyebrow-big display fade-up">The Problem</div>
+
+    <div class="problem-header fade-up">
+      <div class="eyebrow-big display">The Problem</div>
+
+      <div class="blocked-icons">
+        <div class="blocked-icon">
+          <div class="blocked-icon-frame">
+            <img src="images3.png" alt="Cargo ship, sea route">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <line x1="16" y1="16" x2="84" y2="84" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/>
+              <line x1="84" y1="16" x2="16" y2="84" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/>
+              <line x1="16" y1="16" x2="84" y2="84" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/>
+              <line x1="84" y1="16" x2="16" y2="84" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="blocked-caption">Sea — closed</div>
+        </div>
+
+        <div class="blocked-icon">
+          <div class="blocked-icon-frame">
+            <img src="images4.png" alt="Relief cargo plane, air route">
+            <svg viewBox="0 0 100 100" aria-hidden="true">
+              <line x1="16" y1="16" x2="84" y2="84" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/>
+              <line x1="84" y1="16" x2="16" y2="84" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/>
+              <line x1="16" y1="16" x2="84" y2="84" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/>
+              <line x1="84" y1="16" x2="16" y2="84" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="blocked-caption">Air — closed</div>
+        </div>
+      </div>
+    </div>
+
     <h2 class="section-title display fade-up">Aid is moving through corridors no one can safely watch.</h2>
 
     <div class="fade-up">
@@ -611,13 +683,23 @@
     </div>
 
     <p class="bridge fade-up">That gap between 5 and 8 o'clock is the whole problem. <span class="accent">Safe Relay</span> doesn't try to show anyone where the truck is — it just gives Reza one honest thing to watch while she waits.</p>
+
+    <div class="persona-image fade-up">
+      <img src="images5.jpeg" alt="Illustration of a humanitarian volunteer sitting alone with no internet signal, thinking about the delayed truck and the families waiting for the delivery">
+      <div class="persona-image-caption mono">No signal. No update. Just the wait.</div>
+    </div>
+
+    <div class="persona-image fade-up">
+      <img src="images6.jpeg" alt="Comic strip showing the delivery team using Safe Relay to stay on schedule, secure the warehouse, and deliver supplies to the waiting community without incident">
+      <div class="persona-image-caption mono">With Safe Relay — everyone knows, safely.</div>
+    </div>
   </div>
 </section>
 
-<!-- PROTOTYPE SYSTEM & OFFLINE WORKFLOW EXPLANATION -->
+<!-- WORKFLOW -->
 <section class="workflow-section">
   <div class="section-inner">
-    <div class="eyebrow mono fade-up">How The Prototype Works Offline</div>
+    <div class="eyebrow mono fade-up">How the prototype works offline</div>
     <h2 class="section-title display fade-up">A secure, low-bandwidth architecture for high-risk zones.</h2>
     <p class="workflow-intro fade-up">Safe Relay bypasses the need for continuous internet or live GPS tracking by combining satellite observation, human verification, and edge intelligence.</p>
 
@@ -626,17 +708,14 @@
         <h3>1. Satellite & Central Hub Analysis</h3>
         <p>The UN funds a dedicated satellite exclusively for humanitarian aid shipments. This satellite captures current imagery of the <strong>Turkey Corridor, Azerbaijan, Tajikistan, and Uzbekistan</strong>. The Central Hub AI then analyzes possible routes based on these captures.</p>
       </div>
-
       <div class="workflow-step-card">
         <h3>2. Human Verification & Dissemination</h3>
         <p>The AI-analyzed routes are sent to human experts to verify safety and viability. Once verified, the Command Center disseminates route guidelines and instructions down to the drivers.</p>
       </div>
-
       <div class="workflow-step-card">
         <h3>3. Offline Driver Interface</h3>
         <p>The driver interacts with a simple interface on their device. <strong>It does not need an internet connection or GPS to function; it operates completely offline.</strong> When passing checkpoints or milestones, the driver simply taps a button.</p>
       </div>
-
       <div class="workflow-step-card">
         <h3>4. Edge AI & Minimal Signal Transmission</h3>
         <p>When the driver taps the button, the device transmits just <strong>1 byte of signal</strong> (requiring at least a momentary signal snippet) through to the Central Hub AI. Embedded directly within the volunteer application, <strong>Edge AI</strong> processes this minimal transmission locally to compute and display a reliable ETA directly on the volunteer's phone.</p>
@@ -645,25 +724,25 @@
   </div>
 </section>
 
-<!-- TECHNOLOGY COMPARISON SECTION -->
+<!-- COMPARISON -->
 <section class="comparison-section">
   <div class="section-inner">
-    <div class="eyebrow mono fade-up">System Analysis & Comparison</div>
+    <div class="eyebrow mono fade-up">System analysis & comparison</div>
     <h2 class="section-title display fade-up">How Safe Relay compares to existing humanitarian tracking.</h2>
-    <p class="comparison-intro fade-up">When evaluating logistics tools for conflict regions like the Iran corridors, we benchmark our approach against the World Food Programme's **RITA (Relief Item Tracking Application)** — the global standard for tracking humanitarian cargo.</p>
+    <p class="comparison-intro fade-up">When evaluating logistics tools for conflict regions like the Iran corridors, we benchmark our approach against the World Food Programme's <strong>RITA (Relief Item Tracking Application)</strong> — the global standard for tracking humanitarian cargo.</p>
 
     <div class="table-container fade-up">
       <table class="comparison-table">
         <thead>
           <tr>
             <th class="col-feature">Feature / Metric</th>
-            <th class="col-rita">Existing Standard (WFP RITA)</th>
-            <th class="col-ours">Safe Relay (Our System)</th>
+            <th class="col-rita">Existing standard (WFP RITA)</th>
+            <th class="col-ours">Safe Relay (our system)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="col-feature">Main Purpose</td>
+            <td class="col-feature">Main purpose</td>
             <td class="col-rita">Track humanitarian cargo across logistics nodes</td>
             <td class="col-ours">Track medicine deliveries safely during active conflict</td>
           </tr>
@@ -673,17 +752,17 @@
             <td class="col-ours">Offline-first design with minimal check-ins</td>
           </tr>
           <tr>
-            <td class="col-feature">GPS & Security</td>
+            <td class="col-feature">GPS & security</td>
             <td class="col-rita">Standard location/node logging</td>
             <td class="col-ours">Deliberately avoids continuous GPS exposure</td>
           </tr>
           <tr>
-            <td class="col-feature">Arrival Estimation</td>
-            <td class="col-rita">Standard Expected Arrival Date field</td>
+            <td class="col-feature">Arrival estimation</td>
+            <td class="col-rita">Standard expected arrival date field</td>
             <td class="col-ours">AI-generated ETA window and corridor safety analysis</td>
           </tr>
           <tr>
-            <td class="col-feature">End Beneficiaries</td>
+            <td class="col-feature">End beneficiaries</td>
             <td class="col-rita">Restricted to logistics operators and agencies</td>
             <td class="col-ours">Provides simple arrival updates to local volunteers without requiring accounts</td>
           </tr>
@@ -692,20 +771,20 @@
     </div>
 
     <div class="comparison-summary-box fade-up">
-      <h3>The Key Architectural Difference</h3>
-      <p>Traditional tools like RITA rely on continuous internet connectivity and administrative visibility from entry points to extended delivery points. However, in active conflict zones, that constant data stream creates major security vulnerabilities.</p>
-      <p><strong>Safe Relay</strong> shifts the paradigm: instead of broadcasting where a truck is, it uses minimal check-ins and AI prediction to confirm <em>that</em> it is moving safely—bridging the gap for local volunteers without putting convoys at risk.</p>
+      <h3>The key architectural difference</h3>
+      <p>Traditional tools like RITA rely on continuous internet connectivity and administrative visibility from entry points to extended delivery points. In active conflict zones, that constant data stream creates a real security vulnerability.</p>
+      <p><strong>Safe Relay</strong> shifts the paradigm: instead of broadcasting where a truck is, it uses minimal check-ins and AI prediction to confirm <em>that</em> it is moving safely — closing the gap for local volunteers without putting convoys at risk.</p>
     </div>
   </div>
 </section>
 
-<!-- QR CODE SECTION -->
+<!-- QR CODE -->
 <section style="background: var(--ink); color: var(--text-light); text-align: center; padding: clamp(64px, 11vw, 140px) 24px;">
   <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
-    <div class="eyebrow mono fade-up" style="color: var(--text-light-soft);">Scan to Access</div>
-    <h2 class="section-title display fade-up" style="color: var(--text-light); margin-bottom: 24px;">Explore the Safe Relay Homepage and Prototype</h2>
+    <div class="eyebrow mono fade-up" style="color: var(--text-light-soft);">Scan to access</div>
+    <h2 class="section-title display fade-up" style="color: var(--text-light); margin-bottom: 24px;">Explore the Safe Relay homepage and prototype</h2>
     <p class="fade-up" style="color: var(--text-light-soft); font-size: 18px; margin-bottom: 40px;">Scan this QR code to access the homepage, read the full project overview, and experience the interactive prototype directly on your device.</p>
-    
+
     <div class="fade-up" style="background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); display: inline-block;">
       <img src="qr.jpeg" alt="QR Code to Safe Relay Homepage and Prototype" style="display: block; width: 240px; height: 240px; object-fit: contain; margin: 0 auto;">
     </div>
